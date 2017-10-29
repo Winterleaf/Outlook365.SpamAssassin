@@ -1,9 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿/* Copyright 2017 Fairfield Tek, L.L.C.
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+* to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute,
+* sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+* 
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+* OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using Outlook365.SpamAssassin.Data;
 using Outlook365.SpamAssassin.Email;
@@ -14,12 +24,12 @@ namespace Outlook365.SpamAssassin
     public class WorkInstance : BaseSingletonLoop
     {
         /// <summary>
-        /// Last Time The sa-Update command was run.
+        ///     Last Time The sa-Update command was run.
         /// </summary>
         public DateTime? LastRun { get; private set; }
 
         /// <summary>
-        /// Is the service started?
+        ///     Is the service started?
         /// </summary>
         private volatile bool _started;
 
@@ -30,17 +40,17 @@ namespace Outlook365.SpamAssassin
                 return true;
 
             //Check if spamd.exe is running
-            Process[] pname = Process.GetProcessesByName("spamd");
+            var pname = Process.GetProcessesByName("spamd");
             if (pname.Length != 0)
                 return true;
 
             //Start spamd dameon
-            Process program = new Process
+            var program = new Process
             {
                 StartInfo =
                 {
-                    FileName =Path.Combine( Data.Config.ReadConfig().SpamAssassinWorkingFolder,"spamd.exe"),
-                    WorkingDirectory =Data.Config.ReadConfig().SpamAssassinWorkingFolder,
+                    FileName = Path.Combine(Config.ReadConfig().SpamAssassinWorkingFolder, "spamd.exe"),
+                    WorkingDirectory = Config.ReadConfig().SpamAssassinWorkingFolder,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     UseShellExecute = false
@@ -57,13 +67,9 @@ namespace Outlook365.SpamAssassin
             {
                 Console.WriteLine(err.Message);
                 _started = false;
-
             }
             return false;
         }
-
-
-
 
         public new void Start()
         {
@@ -75,17 +81,16 @@ namespace Outlook365.SpamAssassin
 #if DEBUG
 #else
         /// <summary>
-        /// Calls the sa-Update utility to update spam database
+        ///     Calls the sa-Update utility to update spam database
         /// </summary>
         private void UpdateSpamD()
         {
-
-            Process program = new Process
+            var program = new Process
             {
                 StartInfo =
                 {
-                    FileName =Path.Combine( Data.Config.ReadConfig().SpamAssassinWorkingFolder,"sa-update.exe"),
-                    WorkingDirectory =Data.Config.ReadConfig().SpamAssassinWorkingFolder,
+                    FileName = Path.Combine(Config.ReadConfig().SpamAssassinWorkingFolder, "sa-update.exe"),
+                    WorkingDirectory = Config.ReadConfig().SpamAssassinWorkingFolder,
                     Arguments = "--no-gpg",
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -100,7 +105,7 @@ namespace Outlook365.SpamAssassin
         {
             try
             {
-                var mrs = Data.Config.ReadConfig();
+                var mrs = Config.ReadConfig();
 
 #if DEBUG
 
@@ -130,13 +135,11 @@ namespace Outlook365.SpamAssassin
                 //Update Spam Rules.
                 UpdateSpamD();
 #endif
-
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.Message);
             }
-
         }
     }
 

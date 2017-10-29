@@ -36,6 +36,8 @@ This program will create 2 new folders in your mail account:
 Outlook365.Spamassassin will monitor your inbox, when a new message is recieved it will use spam assassin to determine if it is spam.  If it is determined to be junk or blacklisted, it will be moved to your junk folder, if not it will be moved to the "IInbox" folder.
 It will run as a windows service.
 
+<b>Note:</b> You can edit the Black List and White List files at any point and it will used the new file without having to restart the application.
+
 <H2>Setup</h2>
 
 1. Install SpamAssassin For Windows
@@ -68,12 +70,14 @@ It will run as a windows service.
 23.  Rename <b>Config.WhiteList.EmailAddress.Template.txt</b> to <b>Config.WhiteList.EmailAddress.txt</b>
 
 24. From the command prompt, go to the directory you copied the project output to.
-25. Type in "Outlook365.SpamAssassin.exe"
+25. Type in <b>"Outlook365.SpamAssassin.exe"</b>
 26. A console window should display, if everything is configured correctly, it will start showing message header information
-27. Hit "Q" + Enter to exit console application.
+27. Hit <b>"Q" + Enter</b> to exit console application.
 
-28. To install it as a system service type in "Outlook365.SpamAssassin.exe -install" into the console
+28. To install it as a system service type in <b>"Outlook365.SpamAssassin.exe -install"</b> into the console
 29. Open your services and set it to autostart
 30. Start the service.
+
+Note: To uninstall service type <b>Outlook365.SpamAssassin.exe -uninstall</b>
 
 

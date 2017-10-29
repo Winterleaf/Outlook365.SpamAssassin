@@ -36,6 +36,8 @@ This program will create 2 new folders in your mail account:
 Outlook365.Spamassassin will monitor your inbox, when a new message is recieved it will use spam assassin to determine if it is spam.  If it is determined to be junk or blacklisted, it will be moved to your junk folder, if not it will be moved to the "IInbox" folder.
 It will run as a windows service.
 
+<b>Note:</b> You can edit the Black List and White List files at any point and it will used the new file without having to restart the application.
+
 <H2>Setup</h2>
 
 1. Install SpamAssassin For Windows

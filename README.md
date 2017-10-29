@@ -69,7 +69,7 @@ It will run as a windows service.
 22. Add any email address you want to Whitelist ending with a semi-colon (i.e. joe@somewhere.com;joe@joestraders.com;
 23.  Rename <b>Config.WhiteList.EmailAddress.Template.txt</b> to <b>Config.WhiteList.EmailAddress.txt</b>
 
-24. From the command prompt, go to the directory you copied the project output to.
+24. From the administrator command prompt, go to the directory you copied the project output to.
 25. Type in <b>"Outlook365.SpamAssassin.exe"</b>
 26. A console window should display, if everything is configured correctly, it will start showing message header information
 27. Hit <b>"Q" + Enter</b> to exit console application.

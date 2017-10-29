@@ -118,8 +118,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Content Include="Config.BlackList.Domain.Template.txt" />
-    <Content Include="Config.BlackList.EmailAddress.Template.txt" />
+    <Content Include="Config.BlackList.Domain.Template.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config.BlackList.EmailAddress.Template.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Config.Template.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -136,11 +140,15 @@
     <Content Include="Config.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Config.WhiteList.Domain.Template.txt" />
+    <Content Include="Config.WhiteList.Domain.Template.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Config.WhiteList.Domain.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Config.WhiteList.EmailAddress.Template.txt" />
+    <Content Include="Config.WhiteList.EmailAddress.Template.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Config.WhiteList.EmailAddress.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

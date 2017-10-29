@@ -1,0 +1,12 @@
+﻿#Outlook365 
+Username                   : username@domain.com
+Password                   : password
+WebServiceApi              : https://outlook.office365.com/EWS/Exchange.asmx
+
+#SpamAssassin
+SpamAssassin_WorkingFolder : C:\SpamAssassin\
+
+#Settings
+MaxMessageBodyLengthK      : 4
+SpamFlag                   : 2.0
+SpamDetect                 : 4.0

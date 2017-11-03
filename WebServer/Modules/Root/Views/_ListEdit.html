@@ -1,0 +1,69 @@
+﻿<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-6" style="height: 300px;">
+            <div style="width: 100%" class="text-center">
+                <h2>Current @ViewBag.ListType; Entries</h2>
+            </div>
+            <div style="width: 100%" class="text-center">
+                <select id="ListOptions" size="10" style="width: 100%">@ViewBag.Options</select>
+            </div>
+            <div>
+                <button type="button" class="btn-md-primary" style="margin-top: 2px; width: 100%;" onclick="RemoveFromList();">Remove Selected from List</button>
+            </div>
+        </div>
+
+        <div class="col-md-6" style="height: 200px;">
+            <div style="width: 100%" class="text-center">
+
+                <h2>Add to @ViewBag.ListType;</h2>
+            </div>
+            <div style="white-space: nowrap; width: 100%;" class="text-center">
+                <span style="font-weight: bolder; margin-right: 5px;">Domain Name</span>
+                <input type="text" id="txtNewEntry" style="width: 60%"/>
+                <button type="button" class="btn-md-primary" style="margin-top: 2px; width: 20%;" onclick="AddToList();">Add to List</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function RemoveFromList() {
+        var entry = $('#ListOptions').find(":selected").val();
+        var sessionKey = $("#divSessionKey").val();
+        var url = '/@ViewBag.RemovePostUrl';
+
+        $.ajax({
+            url: url,
+            type: 'Post',
+            cache: false,
+            data: {
+                SessionKey: sessionKey,
+                Value: entry
+            }
+        }).done(function(result) {
+            $('#MainMenuContent').html(result);
+        });
+
+
+    }
+
+    function AddToList() {
+        var entry = $("#txtNewEntry").val();
+        var sessionKey = $("#divSessionKey").val();
+        var url = '/@ViewBag.AddPostUrl';
+
+        $.ajax({
+            url: url,
+            type: 'Post',
+            cache: false,
+            data: {
+                SessionKey: sessionKey,
+                Value: entry
+            }
+        }).done(function(result) {
+            $('#MainMenuContent').html(result);
+        });
+    }
+</script>

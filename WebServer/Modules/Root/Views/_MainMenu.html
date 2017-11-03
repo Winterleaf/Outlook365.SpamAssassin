@@ -1,0 +1,99 @@
+﻿<div class="container" style="width: 100%">
+    <div class="row">
+        <div class="col-md-1" id="divNavigation">@Partial['_Navigation'];</div>
+        <div class="col-md-11" id="divMainMenuContent" style="background-color: cadetblue;">
+            <div id="MainMenuContent" style="height: 100%; width: 100%;">
+                @Partial['_Welcome'];
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        //function setHeight() {
+        //    NavHeight = $("#divNavigation").height();
+        //    $('#divMainMenuContent').css('height', NavHeight);
+        //};
+        //setHeight();
+
+        //$(window).resize(function() {
+        //    setHeight();
+        //});
+        $("#Config").click(function() {
+
+            $.ajax({
+                url: '/Configuration',
+                type: 'Post',
+                cache: false,
+                data: {
+                    SessionKey: '@ViewBag.SessionKey;',
+                    Value: ''
+                }
+            }).done(function(result) {
+                $('#MainMenuContent').html(result);
+            });
+        });
+
+        $("#BLDomain").click(function() {
+
+            $.ajax({
+                url: '/EditBlackListDomain',
+                type: 'Post',
+                cache: false,
+                data: {
+                    SessionKey: '@ViewBag.SessionKey;',
+                    Value: ''
+                }
+            }).done(function(result) {
+                $('#MainMenuContent').html(result);
+            });
+        });
+        $("#BLEmail").click(function() {
+
+
+            $.ajax({
+                url: '/EditBlackListEmail',
+                type: 'Post',
+                cache: false,
+                data: {
+                    SessionKey: '@ViewBag.SessionKey;',
+                    Value: ''
+
+                }
+            }).done(function(result) {
+                $('#MainMenuContent').html(result);
+            });
+        });
+        $("#WLDomain").click(function() {
+
+
+            $.ajax({
+                url: '/EditWhiteListDomain',
+                type: 'Post',
+                cache: false,
+                data: {
+                    SessionKey: '@ViewBag.SessionKey;',
+                    Value: ''
+                }
+            }).done(function(result) {
+                $('#MainMenuContent').html(result);
+            });
+        });
+        $("#WLEmail").click(function() {
+
+
+            $.ajax({
+                url: '/EditWhiteListEmail',
+                type: 'Post',
+                cache: false,
+                data: {
+                    SessionKey: '@ViewBag.SessionKey;',
+                    Value: ''
+                }
+            }).done(function(result) {
+                $('#MainMenuContent').html(result);
+            });
+        });
+    });
+</script>

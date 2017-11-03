@@ -16,27 +16,28 @@ using System.Collections.Generic;
 namespace Outlook365.SpamAssassin.Spamassassin
 {
     /// <summary>
-    /// Stores the Spamassassin results
+    ///     Stores the Spamassassin results
     /// </summary>
     public class ParseSummary
     {
         /// <summary>
-        /// SpamAssassin thinks it is spam
+        ///     SpamAssassin thinks it is spam
         /// </summary>
         public bool IsSpam { get; set; }
 
         /// <summary>
-        /// Spam Score set in SpamAssassin
+        ///     Rules Triggered
         /// </summary>
-        public double SpamScore { get; set; }
+        public List<RuleResult> Report { get; set; }
+
         /// <summary>
-        /// Score determined by SpamAssassin
+        ///     Score determined by SpamAssassin
         /// </summary>
         public double Score { get; set; }
 
         /// <summary>
-        /// Rules Triggered
+        ///     Spam Score set in SpamAssassin
         /// </summary>
-        public List<RuleResult> Report { get; set; }
+        public double SpamScore { get; set; }
     }
 }

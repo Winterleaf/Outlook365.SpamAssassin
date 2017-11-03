@@ -12,16 +12,12 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Outlook365.SpamAssassin.Singleton
 {
     /// <summary>
-    /// Looping class base class
+    ///     Looping class base class
     /// </summary>
     public class BaseSingletonLoop
     {
@@ -32,18 +28,26 @@ namespace Outlook365.SpamAssassin.Singleton
 
         public bool Running => !_stopJob;
 
+        private void DoWork()
+        {
+            Thread.CurrentThread.Priority = ThreadPriority.Normal;
+            _isStopped = false;
+            while (!_stopJob)
+                try
+                {
+                    OnTick();
+                }
+                catch (Exception)
+                {
+                    Thread.Sleep(1000);
+                }
+
+            _isStopped = true;
+        }
+
         public bool IsStopped()
         {
             return _stopJob && _isStopped;
-        }
-
-        public void Stop()
-        {
-            _stopJob = true;
-            while (!_isStopped)
-                Thread.Sleep(1);
-            _isStopped = true;
-            OnStop();
         }
 
         public virtual bool OnStart()
@@ -76,22 +80,13 @@ namespace Outlook365.SpamAssassin.Singleton
             return true;
         }
 
-        private void DoWork()
+        public void Stop()
         {
-            Thread.CurrentThread.Priority = ThreadPriority.Normal;
-            _isStopped = false;
-            while (!_stopJob)
-                try
-                {
-                    OnTick();
-                }
-                catch (Exception)
-                {
-                    Thread.Sleep(1000);
-                }
-
-
+            _stopJob = true;
+            while (!_isStopped)
+                Thread.Sleep(1);
             _isStopped = true;
+            OnStop();
         }
     }
 }

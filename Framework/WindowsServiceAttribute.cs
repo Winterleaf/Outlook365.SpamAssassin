@@ -18,20 +18,20 @@ namespace Outlook365.SpamAssassin.Framework
 {
     /// <inheritdoc />
     /// <summary>
-    /// The windows service attribute.
+    ///     The windows service attribute.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class WindowsServiceAttribute : Attribute
     {
         #region Constructors and Destructors
 
         /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Outlook365.SpamAssassin.Framework.WindowsServiceAttribute" /> class. 
-        /// Marks an IWindowsService with configuration and installation attributes.
+        ///     Initializes a new instance of the <see cref="T:Outlook365.SpamAssassin.Framework.WindowsServiceAttribute" /> class.
+        ///     Marks an IWindowsService with configuration and installation attributes.
         /// </summary>
         /// <param name="name">
-        /// The name of the windows service.
+        ///     The name of the windows service.
         /// </param>
         public WindowsServiceAttribute(string name)
         {

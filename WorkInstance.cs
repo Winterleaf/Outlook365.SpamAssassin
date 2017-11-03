@@ -14,10 +14,14 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+#if DEBUG
+#else
 using System.Threading;
+#endif
 using Outlook365.SpamAssassin.Data;
 using Outlook365.SpamAssassin.Email;
 using Outlook365.SpamAssassin.Singleton;
+using Outlook365.SpamAssassin.WebServer;
 
 namespace Outlook365.SpamAssassin
 {
@@ -71,18 +75,22 @@ namespace Outlook365.SpamAssassin
             return false;
         }
 
+        private readonly Server.OwinService _webServer = new Server.OwinService();
+
         public new void Start()
         {
             Config.CreateConfig();
+
+            _webServer.Start();
+
             if (StartSpamd())
                 base.Start();
         }
 
 #if DEBUG
-#else
-        /// <summary>
-        ///     Calls the sa-Update utility to update spam database
-        /// </summary>
+#else /// <summary>
+///     Calls the sa-Update utility to update spam database
+/// </summary>
         private void UpdateSpamD()
         {
             var program = new Process
@@ -110,9 +118,7 @@ namespace Outlook365.SpamAssassin
 #if DEBUG
 
                 EmailReader.ProcessEmail(mrs);
-#else
-
-                //Set max threads = 2 * processors
+#else //Set max threads = 2 * processors
                 ThreadPool.SetMaxThreads(Environment.ProcessorCount * 2, Environment.ProcessorCount * 2);
 
                 //Get Available Threads

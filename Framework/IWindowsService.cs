@@ -43,10 +43,10 @@ namespace Outlook365.SpamAssassin.Framework
         void OnShutdown();
 
         /// <summary>
-        /// This method is called when the service gets a request to start.
+        ///     This method is called when the service gets a request to start.
         /// </summary>
         /// <param name="args">
-        /// Any command line arguments
+        ///     Any command line arguments
         /// </param>
         void OnStart(string[] args);
 
@@ -54,7 +54,6 @@ namespace Outlook365.SpamAssassin.Framework
         ///     This method is called when the service gets a request to stop.
         /// </summary>
         void OnStop();
-
 
         void WriteLine(string msg);
 

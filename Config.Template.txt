@@ -10,3 +10,8 @@ SpamAssassin_WorkingFolder : C:\SpamAssassin\
 MaxMessageBodyLengthK      : 4
 SpamFlag                   : 2.0
 SpamDetect                 : 4.0
+
+
+WebServerHostName          : LocalHost
+WebServerPort              : 9000
+WebServerProtocol          : Http

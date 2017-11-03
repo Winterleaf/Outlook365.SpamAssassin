@@ -25,7 +25,7 @@ namespace Outlook365.SpamAssassin
         EventLogSource = "Outlook365.SpamAssassin", StartMode = ServiceStartMode.Automatic)]
     public class ServiceImplementation : IWindowsService
     {
-     /// <inheritdoc />
+        /// <inheritdoc />
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
@@ -34,6 +34,37 @@ namespace Outlook365.SpamAssassin
         {
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     This method is called when a service gets a request to resume
+        ///     after a pause is issued.
+        /// </summary>
+        public void OnContinue()
+        {
+            ConsoleHarness.WriteToConsole(ConsoleColor.DarkYellow, "Service Starting");
+            WorkService.Instance.Start();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     This method is called when a service gets a request to pause,
+        ///     but not stop completely.
+        /// </summary>
+        public void OnPause()
+        {
+            ConsoleHarness.WriteToConsole(ConsoleColor.DarkYellow, "Service Stopping");
+            WorkService.Instance.Stop();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     This method is called when the machine the service is running on
+        ///     is being shutdown.
+        /// </summary>
+        public void OnShutdown()
+        {
+            WorkService.Instance.Stop();
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -59,40 +90,7 @@ namespace Outlook365.SpamAssassin
 
         public void WriteLine(string msg)
         {
-            
             ConsoleHarness.WriteToConsole(ConsoleColor.DarkYellow, msg);
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        ///     This method is called when a service gets a request to pause,
-        ///     but not stop completely.
-        /// </summary>
-        public void OnPause()
-        {
-            ConsoleHarness.WriteToConsole(ConsoleColor.DarkYellow, "Service Stopping");
-            WorkService.Instance.Stop();
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        ///     This method is called when a service gets a request to resume
-        ///     after a pause is issued.
-        /// </summary>
-        public void OnContinue()
-        {
-            ConsoleHarness.WriteToConsole(ConsoleColor.DarkYellow, "Service Starting");
-            WorkService.Instance.Start();
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        ///     This method is called when the machine the service is running on
-        ///     is being shutdown.
-        /// </summary>
-        public void OnShutdown()
-        {
-            WorkService.Instance.Stop();
         }
     }
 }

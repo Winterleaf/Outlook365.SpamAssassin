@@ -25,16 +25,16 @@ namespace Outlook365.SpamAssassin.Framework
         #region Public Methods and Operators
 
         /// <summary>
-        /// Loads the configuration from assembly attributes
+        ///     Loads the configuration from assembly attributes
         /// </summary>
         /// <typeparam name="T">
-        /// The type of the custom attribute to find.
+        ///     The type of the custom attribute to find.
         /// </typeparam>
         /// <param name="typeWithAttributes">
-        /// The calling assembly to search.
+        ///     The calling assembly to search.
         /// </param>
         /// <returns>
-        /// The custom attribute of type T, if found.
+        ///     The custom attribute of type T, if found.
         /// </returns>
         public static T GetAttribute<T>(this Type typeWithAttributes) where T : Attribute
         {
@@ -42,27 +42,28 @@ namespace Outlook365.SpamAssassin.Framework
         }
 
         /// <summary>
-        /// Loads the configuration from assembly attributes
+        ///     Loads the configuration from assembly attributes
         /// </summary>
         /// <typeparam name="T">
-        /// The type of the custom attribute to find.
+        ///     The type of the custom attribute to find.
         /// </typeparam>
         /// <param name="typeWithAttributes">
-        /// The calling assembly to search.
+        ///     The calling assembly to search.
         /// </param>
         /// <returns>
-        /// An enumeration of attributes of type T that were found.
+        ///     An enumeration of attributes of type T that were found.
         /// </returns>
         public static IEnumerable<T> GetAttributes<T>(this Type typeWithAttributes) where T : Attribute
         {
             // Try to find the configuration attribute for the default logger if it exists
-            Attribute[] configAttributes = Attribute.GetCustomAttributes(typeWithAttributes, typeof(T), false);
+            var configAttributes = Attribute.GetCustomAttributes(typeWithAttributes, typeof(T), false);
 
             // get just the first one
-            if (configAttributes.Length <= 0) yield break;
-            foreach (Attribute attribute1 in configAttributes)
+            if (configAttributes.Length <= 0)
+                yield break;
+            foreach (var attribute1 in configAttributes)
             {
-                T attribute = (T) attribute1;
+                var attribute = (T) attribute1;
                 yield return attribute;
             }
         }

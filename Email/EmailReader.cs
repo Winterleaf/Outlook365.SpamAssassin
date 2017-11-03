@@ -12,7 +12,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Exchange.WebServices.Data;
@@ -25,25 +24,45 @@ namespace Outlook365.SpamAssassin.Email
     {
         private static readonly object Locker = new object();
 
+        public static bool AuthenticateEmailAccount(string username, string password)
+        {
+            try
+            {
+                var service = new ExchangeService
+                {
+                    Credentials = new WebCredentials(username, password),
+                    Url = Config.ReadConfig().ServiceApi
+                };
+                var myInbox = Folder.Bind(service, WellKnownFolderName.Inbox);
+                var view = new ItemView(1, 0, OffsetBasePoint.Beginning)
+                {
+                    PropertySet = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject, ItemSchema.DateTimeReceived)
+                };
+                var findResults = myInbox.FindItems(view);
+                var item = findResults.FirstOrDefault();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         /// <summary>
-        /// Process One email from the inbox
+        ///     Process One email from the inbox
         /// </summary>
         /// <param name="oep">MailReaderSettings settings</param>
         public static void ProcessEmail(object oep)
         {
             try
             {
-                MailReaderSettings ep = (MailReaderSettings)oep;
+                var ep = (MailReaderSettings)oep;
 
                 //Connect to the Outlook365 Web Service
-                ExchangeService service = new ExchangeService
-                {
-                    Credentials = new WebCredentials(ep.User, ep.Pass),
-                    Url = ep.ServiceApi
-                };
+                var service = new ExchangeService { Credentials = new WebCredentials(ep.User, ep.Pass), Url = ep.ServiceApi };
 
                 //Create our default ItemView
-                ItemView view = new ItemView(1, 0, OffsetBasePoint.Beginning)
+                var view = new ItemView(1, 0, OffsetBasePoint.Beginning)
                 {
                     PropertySet = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject, ItemSchema.DateTimeReceived)
                 };
@@ -52,10 +71,10 @@ namespace Outlook365.SpamAssassin.Email
                 view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Ascending);
 
                 //Map Inbox
-                Folder myInbox = Folder.Bind(service, WellKnownFolderName.Inbox);
+                var myInbox = Folder.Bind(service, WellKnownFolderName.Inbox);
 
                 //Set FolderView
-                FolderView folderView = new FolderView(1)
+                var folderView = new FolderView(1)
                 {
                     PropertySet = new PropertySet(BasePropertySet.IdOnly) { FolderSchema.DisplayName },
                     Traversal = FolderTraversal.Deep
@@ -64,8 +83,8 @@ namespace Outlook365.SpamAssassin.Email
                 //Folder used for holding while we evaluate the message
                 //If it doesn't exist, create it.
                 SearchFilter spamassassinFolderSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.DisplayName, "SpamAssassin");
-                Folder spamassassinFolder = service.FindFolders(WellKnownFolderName.MsgFolderRoot, spamassassinFolderSearchFilter, folderView).FirstOrDefault();
-                FolderId spamassassinFolderId = spamassassinFolder?.Id;
+                var spamassassinFolder = service.FindFolders(WellKnownFolderName.MsgFolderRoot, spamassassinFolderSearchFilter, folderView).FirstOrDefault();
+                var spamassassinFolderId = spamassassinFolder?.Id;
                 if (spamassassinFolderId == null)
                 {
                     spamassassinFolder = new Folder(service) { DisplayName = "SpamAssassin" };
@@ -76,8 +95,8 @@ namespace Outlook365.SpamAssassin.Email
                 //Folder where we move junk email to
                 //If it doesn't exist, create it.
                 SearchFilter junkFolderSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.DisplayName, "Junk Email");
-                Folder junkFolder = service.FindFolders(WellKnownFolderName.MsgFolderRoot, junkFolderSearchFilter, folderView).FirstOrDefault();
-                FolderId junkFolderId = junkFolder?.Id;
+                var junkFolder = service.FindFolders(WellKnownFolderName.MsgFolderRoot, junkFolderSearchFilter, folderView).FirstOrDefault();
+                var junkFolderId = junkFolder?.Id;
                 if (junkFolderId == null)
                 {
                     junkFolder = new Folder(service) { DisplayName = "Junk Email" };
@@ -90,9 +109,9 @@ namespace Outlook365.SpamAssassin.Email
                 // ReSharper disable once InconsistentNaming
                 SearchFilter IInboxFolderSearchFilter = new SearchFilter.IsEqualTo(FolderSchema.DisplayName, "IInbox");
                 // ReSharper disable once InconsistentNaming
-                Folder IInboxFolder = service.FindFolders(WellKnownFolderName.MsgFolderRoot, IInboxFolderSearchFilter, folderView).FirstOrDefault();
+                var IInboxFolder = service.FindFolders(WellKnownFolderName.MsgFolderRoot, IInboxFolderSearchFilter, folderView).FirstOrDefault();
                 // ReSharper disable once InconsistentNaming
-                FolderId IInboxFolderId = IInboxFolder?.Id;
+                var IInboxFolderId = IInboxFolder?.Id;
                 if (IInboxFolderId == null)
                 {
                     IInboxFolder = new Folder(service) { DisplayName = "IInbox" };
@@ -106,7 +125,7 @@ namespace Outlook365.SpamAssassin.Email
                 lock (Locker)
                 {
                     //Search
-                    FindItemsResults<Item> findResults = myInbox.FindItems(view);
+                    var findResults = myInbox.FindItems(view);
                     //Get First
                     item = findResults.FirstOrDefault();
                     //Check for Null
@@ -120,29 +139,27 @@ namespace Outlook365.SpamAssassin.Email
                 }
 
                 //Define properties we want to fetch when contacting the exchange service
-                PropertySet props = new PropertySet(ItemSchema.MimeContent, ItemSchema.Subject, EmailMessageSchema.From, EmailMessageSchema.Sender, ItemSchema.Body);
+                var props = new PropertySet(ItemSchema.MimeContent, ItemSchema.Subject, EmailMessageSchema.From, EmailMessageSchema.Sender, ItemSchema.Body);
 
                 //Get the message and bind it to an emailmessage
-                EmailMessage em = EmailMessage.Bind(service, item.Id, props);
+                var em = EmailMessage.Bind(service, item.Id, props);
 
                 //Load the properties we want
                 em.Load(props);
 
                 //Get the mimeContent for the message, basically, headers, etc.
-                MimeContent mimeContent = em.MimeContent;
+                var mimeContent = em.MimeContent;
 
                 //Set it as not read.
                 em.IsRead = false;
 
-
-
                 string msg;
                 //Copy to MimeContent to a string.
-                using (MemoryStream fs = new MemoryStream())
+                using (var fs = new MemoryStream())
                 {
                     fs.Write(mimeContent.Content, 0, mimeContent.Content.Length);
                     fs.Position = 0;
-                    StreamReader sr = new StreamReader(fs);
+                    var sr = new StreamReader(fs);
                     msg = sr.ReadToEnd();
                 }
 
@@ -194,7 +211,7 @@ namespace Outlook365.SpamAssassin.Email
                 if (doProcess)
                 {
                     //Get the Spam Report
-                    ParseSummary spamReport = SimpleSpamAssassin.GetReport("127.0.0.1", msg);
+                    var spamReport = SimpleSpamAssassin.GetReport("127.0.0.1", msg);
 #if DEBUG
                     Console.WriteLine($"Checkedg Message, Subject: '{em.Subject}' Score: {spamReport.Score} out of {ep.SpamFlag}");
 #endif
@@ -244,6 +261,5 @@ namespace Outlook365.SpamAssassin.Email
                 //Just Dump Out, we just want to try it again if it fails and not crash the service.
             }
         }
-
     }
 }

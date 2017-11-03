@@ -29,46 +29,44 @@ namespace Outlook365.SpamAssassin.Framework
     [RunInstaller(true)]
     public partial class WindowsServiceInstaller : Installer
     {
-        #region Constructors and Destructors
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:Outlook365.SpamAssassin.Framework.WindowsServiceInstaller" /> class. 
-        ///     Creates a blank windows service installer with configuration in ServiceImplementation
-        /// </summary>
-        public WindowsServiceInstaller()
-            : this(typeof(IWindowsService))
-        {
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:Outlook365.SpamAssassin.Framework.WindowsServiceInstaller" /> class. 
-        /// Creates a windows service installer using the type specified.
-        /// </summary>
-        /// <param name="windowsServiceType">
-        /// The type of the windows service to install.
-        /// </param>
-        public WindowsServiceInstaller(Type windowsServiceType)
-        {
-            if (!windowsServiceType.GetInterfaces().Contains(typeof(IWindowsService)))
-            {
-                throw new ArgumentException("Type to install must implement IWindowsService.", nameof(windowsServiceType));
-            }
-
-            WindowsServiceAttribute attribute = windowsServiceType.GetAttribute<WindowsServiceAttribute>();
-
-            Configuration = attribute ?? throw new ArgumentException("Type to install must be marked with a WindowsServiceAttribute.", nameof(windowsServiceType));
-        }
-
-        #endregion
-
         #region Public Properties
 
         /// <summary>
         ///     Gets or sets the type of the windows service to install.
         /// </summary>
         public WindowsServiceAttribute Configuration { get; set; }
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:Outlook365.SpamAssassin.Framework.WindowsServiceInstaller" /> class.
+        ///     Creates a blank windows service installer with configuration in ServiceImplementation
+        /// </summary>
+        public WindowsServiceInstaller() : this(typeof(IWindowsService))
+        {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:Outlook365.SpamAssassin.Framework.WindowsServiceInstaller" /> class.
+        ///     Creates a windows service installer using the type specified.
+        /// </summary>
+        /// <param name="windowsServiceType">
+        ///     The type of the windows service to install.
+        /// </param>
+        public WindowsServiceInstaller(Type windowsServiceType)
+        {
+            if (!windowsServiceType.GetInterfaces().Contains(typeof(IWindowsService)))
+                throw new ArgumentException("Type to install must implement IWindowsService.", nameof(windowsServiceType));
+
+            var attribute = windowsServiceType.GetAttribute<WindowsServiceAttribute>();
+
+            Configuration = attribute ?? throw new ArgumentException("Type to install must be marked with a WindowsServiceAttribute.",
+                                nameof(windowsServiceType));
+        }
 
         #endregion
 
@@ -82,41 +80,41 @@ namespace Outlook365.SpamAssassin.Framework
         {
             string path = "/assemblypath=" + Assembly.GetEntryAssembly().Location;
 
-            using (TransactedInstaller ti = new TransactedInstaller())
+            using (var ti = new TransactedInstaller())
             {
                 ti.Installers.Add(new WindowsServiceInstaller(typeof(T)));
-                ti.Context = new InstallContext(null, new[] { path });
+                ti.Context = new InstallContext(null, new[] {path});
                 ti.Install(new Hashtable());
             }
         }
 
         /// <summary>
-        /// Performs a transacted un-installation at run-time of the AutoCounterInstaller and any other listed installers.
+        ///     Performs a transacted un-installation at run-time of the AutoCounterInstaller and any other listed installers.
         /// </summary>
         /// <param name="otherInstallers">
-        /// The other installers to include in the transaction
+        ///     The other installers to include in the transaction
         /// </param>
         /// <typeparam name="T">
-        /// The IWindowsService implementer to install.
+        ///     The IWindowsService implementer to install.
         /// </typeparam>
         public static void RuntimeUnInstall<T>(params Installer[] otherInstallers) where T : IWindowsService
         {
             string path = "/assemblypath=" + Assembly.GetEntryAssembly().Location;
 
-            using (TransactedInstaller ti = new TransactedInstaller())
+            using (var ti = new TransactedInstaller())
             {
                 ti.Installers.Add(new WindowsServiceInstaller(typeof(T)));
-                ti.Context = new InstallContext(null, new[] { path });
+                ti.Context = new InstallContext(null, new[] {path});
                 ti.Uninstall(null);
             }
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Installer class, to use run InstallUtil against this .exe
+        ///     Installer class, to use run InstallUtil against this .exe
         /// </summary>
         /// <param name="savedState">
-        /// The saved state for the installation.
+        ///     The saved state for the installation.
         /// </param>
         public override void Install(IDictionary savedState)
         {
@@ -131,17 +129,15 @@ namespace Outlook365.SpamAssassin.Framework
                 return;
             // create the source if it doesn't exist
             if (!EventLog.SourceExists(Configuration.EventLogSource))
-            {
                 EventLog.CreateEventSource(Configuration.EventLogSource, "Application");
-            }
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Rolls back to the state of the counter, and performs the normal rollback.
+        ///     Rolls back to the state of the counter, and performs the normal rollback.
         /// </summary>
         /// <param name="savedState">
-        /// The saved state for the installation.
+        ///     The saved state for the installation.
         /// </param>
         public override void Rollback(IDictionary savedState)
         {
@@ -154,10 +150,10 @@ namespace Outlook365.SpamAssassin.Framework
 
         /// <inheritdoc />
         /// <summary>
-        /// Removes the counters, then calls the base uninstall.
+        ///     Removes the counters, then calls the base uninstall.
         /// </summary>
         /// <param name="savedState">
-        /// The saved state for the installation.
+        ///     The saved state for the installation.
         /// </param>
         public override void Uninstall(IDictionary savedState)
         {
@@ -172,9 +168,7 @@ namespace Outlook365.SpamAssassin.Framework
                 return;
             // create the source if it doesn't exist
             if (EventLog.SourceExists(Configuration.EventLogSource))
-            {
                 EventLog.DeleteEventSource(Configuration.EventLogSource);
-            }
         }
 
         #endregion
@@ -197,7 +191,7 @@ namespace Outlook365.SpamAssassin.Framework
         /// <returns>Process installer for this service</returns>
         private ServiceProcessInstaller ConfigureProcessInstaller()
         {
-            ServiceProcessInstaller result = new ServiceProcessInstaller();
+            var result = new ServiceProcessInstaller();
 
             // if a user name is not provided, will run under local service acct
             if (string.IsNullOrEmpty(Configuration.UserName))
@@ -224,13 +218,13 @@ namespace Outlook365.SpamAssassin.Framework
         private ServiceInstaller ConfigureServiceInstaller()
         {
             // create and config a service installer
-            ServiceInstaller result = new ServiceInstaller
-                             {
-                                 ServiceName = Configuration.Name, 
-                                 DisplayName = Configuration.DisplayName, 
-                                 Description = Configuration.Description, 
-                                 StartType = Configuration.StartMode, 
-                             };
+            var result = new ServiceInstaller
+            {
+                ServiceName = Configuration.Name,
+                DisplayName = Configuration.DisplayName,
+                Description = Configuration.Description,
+                StartType = Configuration.StartMode
+            };
 
             return result;
         }

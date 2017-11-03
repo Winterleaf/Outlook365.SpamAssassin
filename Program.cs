@@ -40,7 +40,7 @@ namespace Outlook365.SpamAssassin
                 // otherwise, fire up the service as either console or windows service based on UserInteractive property.
                 else
                 {
-                    ServiceImplementation implementation = new ServiceImplementation();
+                    var implementation = new ServiceImplementation();
 
                     // if started from console, file explorer, etc, run as console app.
                     if (Environment.UserInteractive)

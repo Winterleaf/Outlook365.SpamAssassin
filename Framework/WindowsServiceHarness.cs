@@ -27,18 +27,20 @@ namespace Outlook365.SpamAssassin.Framework
 
         /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Outlook365.SpamAssassin.Framework.WindowsServiceHarness" /> class. 
-        /// Constructor a generic windows service from the given class
+        ///     Initializes a new instance of the <see cref="T:Outlook365.SpamAssassin.Framework.WindowsServiceHarness" /> class.
+        ///     Constructor a generic windows service from the given class
         /// </summary>
         /// <param name="serviceImplementation">
-        /// Service implementation.
+        ///     Service implementation.
         /// </param>
         public WindowsServiceHarness(IWindowsService serviceImplementation)
         {
             // make sure service passed in is valid
 
             // set instance and backward instance
-            ServiceImplementation = serviceImplementation ?? throw new ArgumentNullException(nameof(serviceImplementation), "IWindowsService cannot be null in call to GenericWindowsService");
+            ServiceImplementation = serviceImplementation ??
+                                    throw new ArgumentNullException(nameof(serviceImplementation),
+                                        "IWindowsService cannot be null in call to GenericWindowsService");
 
             // configure our service
             ConfigureServiceFromAttributes(serviceImplementation);
@@ -89,10 +91,10 @@ namespace Outlook365.SpamAssassin.Framework
 
         /// <inheritdoc />
         /// <summary>
-        /// Called when service is requested to start
+        ///     Called when service is requested to start
         /// </summary>
         /// <param name="args">
-        /// The startup arguments array.
+        ///     The startup arguments array.
         /// </param>
         protected override void OnStart(string[] args)
         {
@@ -109,23 +111,20 @@ namespace Outlook365.SpamAssassin.Framework
         }
 
         /// <summary>
-        /// Set configuration data
+        ///     Set configuration data
         /// </summary>
         /// <param name="serviceImplementation">
-        /// The service with configuration settings.
+        ///     The service with configuration settings.
         /// </param>
         private void ConfigureServiceFromAttributes(IWindowsService serviceImplementation)
         {
-            WindowsServiceAttribute attribute = serviceImplementation.GetType().GetAttribute<WindowsServiceAttribute>();
+            var attribute = serviceImplementation.GetType().GetAttribute<WindowsServiceAttribute>();
 
             if (attribute != null)
             {
                 // wire up the event log source, if provided
                 if (!string.IsNullOrWhiteSpace(attribute.EventLogSource))
-                {
-                    // assign to the base service's EventLog property for auto-log events.
                     EventLog.Source = attribute.EventLogSource;
-                }
 
                 CanStop = attribute.CanStop;
                 CanPauseAndContinue = attribute.CanPauseAndContinue;

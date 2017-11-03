@@ -60,6 +60,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.RemovePostUrl = "RemoveBlackListDomain";
             ViewBag.ListType = "Domain Black List";
             ViewBag.AddPostUrl = "AddBlackListDomain";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             var options = Config.ReadList(Config.ListType.BlackListDomain).Distinct().OrderBy(x => x).ToList();
             options.Add(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
@@ -75,6 +76,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Email Black List";
             ViewBag.AddPostUrl = "AddBlackListEmail";
             ViewBag.RemovePostUrl = "RemoveBlackListEmail";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             var options = Config.ReadList(Config.ListType.BlackListEmailAddress).Distinct().OrderBy(x => x).ToList();
             options.Add(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
@@ -90,6 +92,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Domain White List";
             ViewBag.AddPostUrl = "AddWhiteListDomain";
             ViewBag.RemovePostUrl = "RemoveWhiteListDomain";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             var options = Config.ReadList(Config.ListType.WhiteListDomain).Distinct().OrderBy(x => x).ToList();
             options.Add(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
@@ -105,6 +108,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Email White List";
             ViewBag.AddPostUrl = "AddWhiteListEmail";
             ViewBag.RemovePostUrl = "RemoveWhiteListEmail";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             var options = Config.ReadList(Config.ListType.WhiteListEmailAddress).Distinct().OrderBy(x => x).ToList();
             options.Add(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
@@ -128,6 +132,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.WebServerHostName = c.WebServerHostName;
             ViewBag.WebServerPort = c.WebServerPort;
             ViewBag.WebServerProtocol = c.WebServerProtocol;
+            ViewBag.SessionKey = sessionKey.SessionKey;
 
             return View["_Configuration"];
         }
@@ -140,6 +145,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.Options = GenerateSelectOptions(Config.ReadList(Config.ListType.BlackListDomain));
             ViewBag.AddPostUrl = "AddBlackListDomain";
             ViewBag.RemovePostUrl = "RemoveBlackListDomain";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             return View["_ListEdit"];
         }
 
@@ -150,6 +156,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Email Black List";
             ViewBag.AddPostUrl = "AddBlackListEmail";
             ViewBag.RemovePostUrl = "RemoveBlackListEmail";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             ViewBag.Options = GenerateSelectOptions(Config.ReadList(Config.ListType.BlackListEmailAddress));
             return View["_ListEdit"];
         }
@@ -161,6 +168,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Domain White List";
             ViewBag.AddPostUrl = "AddWhiteListDomain";
             ViewBag.RemovePostUrl = "RemoveWhiteListDomain";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             ViewBag.Options = GenerateSelectOptions(Config.ReadList(Config.ListType.WhiteListDomain));
             return View["_ListEdit"];
         }
@@ -172,6 +180,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Email White List";
             ViewBag.AddPostUrl = "AddWhiteListEmail";
             ViewBag.RemovePostUrl = "RemoveWhiteListEmail";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             ViewBag.Options = GenerateSelectOptions(Config.ReadList(Config.ListType.WhiteListEmailAddress));
             return View["_ListEdit"];
         }
@@ -211,6 +220,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Domain Black List";
             ViewBag.AddPostUrl = "AddBlackListDomain";
             ViewBag.RemovePostUrl = "RemoveBlackListDomain";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             var options = Config.ReadList(Config.ListType.BlackListDomain).Distinct().OrderBy(x => x).ToList();
             options.Remove(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
@@ -226,6 +236,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Email Black List";
             ViewBag.AddPostUrl = "AddBlackListEmail";
             ViewBag.RemovePostUrl = "RemoveBlackListEmail";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             var options = Config.ReadList(Config.ListType.BlackListEmailAddress).Distinct().OrderBy(x => x).ToList();
             options.Remove(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
@@ -241,6 +252,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.RemovePostUrl = "RemoveWhiteListDomain";
             ViewBag.ListType = "Domain White List";
             ViewBag.AddPostUrl = "AddWhiteListDomain";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             var options = Config.ReadList(Config.ListType.WhiteListDomain).Distinct().OrderBy(x => x).ToList();
             options.Remove(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
@@ -256,6 +268,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             ViewBag.ListType = "Email White List";
             ViewBag.AddPostUrl = "AddWhiteListEmail";
             ViewBag.RemovePostUrl = "RemoveWhiteListEmail";
+            ViewBag.SessionKey = sessionKey.SessionKey;
             var options = Config.ReadList(Config.ListType.WhiteListEmailAddress).Distinct().OrderBy(x => x).ToList();
             options.Remove(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();

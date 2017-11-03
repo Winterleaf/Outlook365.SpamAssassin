@@ -168,7 +168,7 @@ namespace Outlook365.SpamAssassin.Email
 
                 bool doProcess = false;
 
-                if (Config.ReadList(Config.ListType.BlackListDomain).Contains(domain))
+                if (Config.ReadList(Config.ListType.BlackListDomain).Any(x=>x.EndsWith(domain)))
                 {
 #if DEBUG
                     Console.WriteLine($"Moving To Junk: BlackList Domain");
@@ -191,10 +191,14 @@ namespace Outlook365.SpamAssassin.Email
 
                 if (!em.From.Address.ToLower().StartsWith("/o"))
                     //If the address starts with '/o' then it's an exchange mailbox
-                    if (!Config.ReadList(Config.ListType.WhiteListDomain).Contains(domain))
+                    if (!Config.ReadList(Config.ListType.WhiteListDomain).Any(x=>x.EndsWith(domain)))
+                    
+                    {
                         if (!Config.ReadList(Config.ListType.WhiteListEmailAddress).Contains(em.From.Address))
+                        {
                             //If the body isn't empty
                             if (em.Body.Text != null)
+                            {
                                 //If the lengh < max length checked
                                 if (em.Body.Text.Length < ep.MaxBodyLength)
                                 {
@@ -206,6 +210,9 @@ namespace Outlook365.SpamAssassin.Email
                                     Console.WriteLine("Skipping Check Size to Big.");
 #endif
                                 }
+                            }
+                        }
+                    }
 
                 //We need to check this email
                 if (doProcess)

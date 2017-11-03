@@ -39,7 +39,7 @@
             type: 'Post',
             cache: false,
             data: {
-                SessionKey: sessionKey,
+                SessionKey: '@ViewBag.SessionKey;',
                 Value: entry
             }
         }).done(function(result) {
@@ -59,7 +59,7 @@
             type: 'Post',
             cache: false,
             data: {
-                SessionKey: sessionKey,
+                SessionKey: '@ViewBag.SessionKey;',
                 Value: entry
             }
         }).done(function(result) {

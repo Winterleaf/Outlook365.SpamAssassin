@@ -78,6 +78,11 @@ It will run as a windows service.
 29. Open your services and set it to autostart
 30. Start the service.
 
+31. Open a Web Browser and go to "Http://localhost:9000"
+32. Log in with your office365 Credentials
+33. You can now manage your white and black lists via a website. (Self Hosted Owin, does not require IIS)
+
+
 Note: To uninstall service type <b>Outlook365.SpamAssassin.exe -uninstall</b>
 
 

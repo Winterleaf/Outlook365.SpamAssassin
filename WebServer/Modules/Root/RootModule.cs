@@ -80,7 +80,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             var options = Config.ReadList(Config.ListType.BlackListEmailAddress).Distinct().OrderBy(x => x).ToList();
             options.Add(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
-            Config.WriteList(options, Config.ListType.BlackListDomain);
+            Config.WriteList(options, Config.ListType.BlackListEmailAddress);
             ViewBag.Options = GenerateSelectOptions(options);
             return View["_ListEdit"];
         }
@@ -96,7 +96,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             var options = Config.ReadList(Config.ListType.WhiteListDomain).Distinct().OrderBy(x => x).ToList();
             options.Add(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
-            Config.WriteList(options, Config.ListType.BlackListDomain);
+            Config.WriteList(options, Config.ListType.WhiteListDomain);
             ViewBag.Options = GenerateSelectOptions(options);
             return View["_ListEdit"];
         }
@@ -112,7 +112,7 @@ namespace Outlook365.SpamAssassin.WebServer.Modules.Root
             var options = Config.ReadList(Config.ListType.WhiteListEmailAddress).Distinct().OrderBy(x => x).ToList();
             options.Add(sessionKey.Value);
             options = options.Where(x => x.Trim() != "").OrderBy(x => x).ToList();
-            Config.WriteList(options, Config.ListType.BlackListDomain);
+            Config.WriteList(options, Config.ListType.WhiteListEmailAddress);
             ViewBag.Options = GenerateSelectOptions(options);
             return View["_ListEdit"];
         }

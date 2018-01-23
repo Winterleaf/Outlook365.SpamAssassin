@@ -167,53 +167,46 @@ namespace Outlook365.SpamAssassin.Email
                 string domain = em.From.Address.Substring(em.From.Address.IndexOf('@') + 1).ToLower();
 
                 bool doProcess = false;
-
-                if (Config.ReadList(Config.ListType.BlackListDomain).Any(x=>x.EndsWith(domain)))
-                {
-#if DEBUG
-                    Console.WriteLine($"Moving To Junk: BlackList Domain");
-#endif
-                    em.Subject = "{BlackList Domain} " + em.Subject;
-                    em.Update(ConflictResolutionMode.AlwaysOverwrite);
-                    item.Move(junkFolderId);
-                    return;
-                }
-                if (Config.ReadList(Config.ListType.BlackListEmailAddress).Contains(em.From.Address))
-                {
-#if DEBUG
-                    Console.WriteLine($"Moving To Junk: BlackList Email Address");
-#endif
-                    em.Subject = "{BlackList Email Address} " + em.Subject;
-                    em.Update(ConflictResolutionMode.AlwaysOverwrite);
-                    item.Move(junkFolderId);
-                    return;
-                }
-
-                if (!em.From.Address.ToLower().StartsWith("/o"))
-                    //If the address starts with '/o' then it's an exchange mailbox
-                    if (!Config.ReadList(Config.ListType.WhiteListDomain).Any(x=>x.EndsWith(domain)))
-                    
-                    {
-                        if (!Config.ReadList(Config.ListType.WhiteListEmailAddress).Contains(em.From.Address))
+                if (!Config.ReadList(Config.ListType.WhiteListEmailAddress).Any(x => x.Equals(em.From.Address, StringComparison.InvariantCultureIgnoreCase)))
+                    if (!Config.ReadList(Config.ListType.WhiteListDomain).Any(x => x.ToLower().EndsWith(domain)))
+                        if (!em.From.Address.ToLower().StartsWith("/o"))
                         {
-                            //If the body isn't empty
-                            if (em.Body.Text != null)
+                            if (Config.ReadList(Config.ListType.BlackListDomain).Any(x => x.EndsWith(domain)))
                             {
-                                //If the lengh < max length checked
-                                if (em.Body.Text.Length < ep.MaxBodyLength)
-                                {
-                                    doProcess = true;
-                                }
-                                else
-                                {
 #if DEBUG
-                                    Console.WriteLine("Skipping Check Size to Big.");
+                                Console.WriteLine($"Moving To Junk: BlackList Domain");
 #endif
-                                }
+                                em.Subject = "{BlackList Domain} " + em.Subject;
+                                em.Update(ConflictResolutionMode.AlwaysOverwrite);
+                                item.Move(junkFolderId);
+                                return;
                             }
-                        }
-                    }
+                            if (Config.ReadList(Config.ListType.BlackListEmailAddress).Contains(em.From.Address))
+                            {
+#if DEBUG
+                                Console.WriteLine($"Moving To Junk: BlackList Email Address");
+#endif
+                                em.Subject = "{BlackList Email Address} " + em.Subject;
+                                em.Update(ConflictResolutionMode.AlwaysOverwrite);
+                                item.Move(junkFolderId);
+                                return;
+                            }
 
+                        }
+                if (em.Body.Text != null)
+                {
+                    //If the lengh < max length checked
+                    if (em.Body.Text.Length < ep.MaxBodyLength)
+                    {
+                        doProcess = true;
+                    }
+                    else
+                    {
+#if DEBUG
+                        Console.WriteLine("Skipping Check Size to Big.");
+#endif
+                    }
+                }
                 //We need to check this email
                 if (doProcess)
                 {

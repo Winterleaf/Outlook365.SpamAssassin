@@ -208,12 +208,12 @@ WebServerProtocol          : Http
                 throw;
             }
 
-            return filedata.Split(';').Select(line => line.ToLower().Trim()).ToList();
+            return filedata.Replace("\r\n","").Split(';').Select(line => line.ToLower().Trim()).ToList();
         }
 
         public static void WriteList(List<string> values, ListType listType)
         {
-            string data = values.Aggregate("", (current, s) => current + s + ";");
+            string data = values.Aggregate("", (current, s) => current + s + ";\r\n");
             string path;
             switch (listType)
             {

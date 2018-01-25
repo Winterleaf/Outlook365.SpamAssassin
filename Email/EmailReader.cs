@@ -191,22 +191,22 @@ namespace Outlook365.SpamAssassin.Email
                                 item.Move(junkFolderId);
                                 return;
                             }
-
-                        }
-                if (em.Body.Text != null)
-                {
-                    //If the lengh < max length checked
-                    if (em.Body.Text.Length < ep.MaxBodyLength)
-                    {
-                        doProcess = true;
-                    }
-                    else
-                    {
+                            if (em.Body.Text != null)
+                            {
+                                //If the lengh < max length checked
+                                if (em.Body.Text.Length < ep.MaxBodyLength)
+                                {
+                                    doProcess = true;
+                                }
+                                else
+                                {
 #if DEBUG
-                        Console.WriteLine("Skipping Check Size to Big.");
+                                    Console.WriteLine("Skipping Check Size to Big.");
 #endif
-                    }
-                }
+                                }
+                            }
+                        }
+                
                 //We need to check this email
                 if (doProcess)
                 {
